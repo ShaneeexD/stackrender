@@ -1,6 +1,8 @@
 package com.example.examplemod.manager;
 
 import com.example.examplemod.config.StackConfig;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.BlockPos;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.resources.ResourceKey;
@@ -9,8 +11,11 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.animal.Cat;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.animal.Sheep;
+import net.minecraft.world.entity.animal.TropicalFish;
+import net.minecraft.world.entity.animal.horse.Horse;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 
@@ -70,7 +75,7 @@ public final class StackGroupManager {
             if (!isGroupCandidate(minecraft, player, livingEntity, maxDistanceSqr)) {
                 continue;
             }
-            StackKey key = new StackKey(livingEntity.getType(), livingEntity.blockPosition(), getVariant(livingEntity));
+            StackKey key = new StackKey(livingEntity.getType(), getGroupingPos(livingEntity), getVariant(livingEntity));
             candidates.computeIfAbsent(key, ignored -> new ArrayList<>()).add(livingEntity);
         }
 
@@ -118,6 +123,9 @@ public final class StackGroupManager {
         if (entity instanceof ArmorStand) {
             return false;
         }
+        if (!StackConfig.isEntityTypeEnabled(entity.getType())) {
+            return false;
+        }
         if (!entity.isAlive()) {
             return false;
         }
@@ -153,10 +161,43 @@ public final class StackGroupManager {
         return entity.isAlive();
     }
 
+    private BlockPos getGroupingPos(LivingEntity entity) {
+        int cellSize = Math.max(1, StackConfig.groupingCellSize);
+        BlockPos pos = entity.blockPosition();
+        if (cellSize == 1) {
+            return pos;
+        }
+        return new BlockPos(
+                Math.floorDiv(pos.getX(), cellSize) * cellSize,
+                Math.floorDiv(pos.getY(), cellSize) * cellSize,
+                Math.floorDiv(pos.getZ(), cellSize) * cellSize
+        );
+    }
+
     private int getVariant(LivingEntity entity) {
         if (entity.getType() == EntityType.SHEEP && entity instanceof Sheep sheep && StackConfig.groupSheepByColor) {
             return sheep.getColor().getId();
         }
+        if (entity instanceof Cat cat && StackConfig.groupCatByVariant) {
+            return readVariantHash(cat, "variant", "CatType");
+        }
+        if (entity instanceof Horse horse && StackConfig.groupHorseByVariant) {
+            return readVariantHash(horse, "Variant");
+        }
+        if (entity instanceof TropicalFish tropicalFish && StackConfig.groupTropicalFishByVariant) {
+            return readVariantHash(tropicalFish, "Variant");
+        }
         return 0;
+    }
+
+    private int readVariantHash(LivingEntity entity, String... keys) {
+        CompoundTag tag = entity.saveWithoutId(new CompoundTag());
+        int hash = 1;
+        for (String key : keys) {
+            if (tag.contains(key)) {
+                hash = 31 * hash + tag.get(key).toString().hashCode();
+            }
+        }
+        return hash == 1 ? 0 : hash;
     }
 }
