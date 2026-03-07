@@ -1,6 +1,6 @@
-package com.example.examplemod.mixin;
+package com.shaneeexd.stackrender.mixin;
 
-import com.example.examplemod.render.StackLabelRenderer;
+import com.shaneeexd.stackrender.render.StackLabelRenderer;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
@@ -17,3 +17,5 @@ public abstract class LivingEntityRendererLabelMixin {
         StackLabelRenderer.renderLabel(entity, poseStack, bufferSource);
     }
 }
+
+

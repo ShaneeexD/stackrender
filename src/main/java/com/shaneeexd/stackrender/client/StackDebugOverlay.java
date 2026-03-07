@@ -1,7 +1,7 @@
-package com.example.examplemod.client;
+package com.shaneeexd.stackrender.client;
 
-import com.example.examplemod.config.StackConfig;
-import com.example.examplemod.manager.StackGroupManager;
+import com.shaneeexd.stackrender.config.StackConfig;
+import com.shaneeexd.stackrender.manager.StackGroupManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
@@ -33,3 +33,5 @@ public final class StackDebugOverlay {
         guiGraphics.drawString(minecraft.font, Component.literal(String.format("Rebuild: %.3f ms", manager.getLastRebuildMillis())), x, y + 40, color, true);
     }
 }
+
+

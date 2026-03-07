@@ -1,6 +1,6 @@
-package com.example.examplemod.config;
+package com.shaneeexd.stackrender.config;
 
-import com.example.examplemod.StackRender;
+import com.shaneeexd.stackrender.StackRender;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -195,3 +195,5 @@ public final class StackConfig {
         public final Set<String> disabledEntityTypeIds = new LinkedHashSet<>();
     }
 }
+
+

@@ -1,7 +1,7 @@
-package com.example.examplemod.manager;
+package com.shaneeexd.stackrender.manager;
 
-import com.example.examplemod.StackRender;
-import com.example.examplemod.config.StackConfig;
+import com.shaneeexd.stackrender.StackRender;
+import com.shaneeexd.stackrender.config.StackConfig;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.core.BlockPos;
 import net.minecraft.client.Minecraft;
@@ -239,3 +239,5 @@ public final class StackGroupManager {
         return hash == 1 ? 0 : hash;
     }
 }
+
+

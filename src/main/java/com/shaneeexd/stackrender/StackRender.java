@@ -1,9 +1,9 @@
-package com.example.examplemod;
+package com.shaneeexd.stackrender;
 
-import com.example.examplemod.client.StackDebugOverlay;
-import com.example.examplemod.client.StackConfigScreen;
+import com.shaneeexd.stackrender.client.StackDebugOverlay;
+import com.shaneeexd.stackrender.client.StackConfigScreen;
 import com.mojang.logging.LogUtils;
-import com.example.examplemod.config.StackConfig;
+import com.shaneeexd.stackrender.config.StackConfig;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.ConfigScreenHandler;
 import net.minecraftforge.common.MinecraftForge;
@@ -22,7 +22,7 @@ public final class StackRender {
 
     public StackRender(FMLJavaModLoadingContext context) {
         context.registerConfig(ModConfig.Type.CLIENT, StackConfig.SPEC, "stackrender-client.toml");
-        MinecraftForge.EVENT_BUS.register(new com.example.examplemod.event.ClientTickHandler());
+        MinecraftForge.EVENT_BUS.register(new com.shaneeexd.stackrender.event.ClientTickHandler());
         MinecraftForge.EVENT_BUS.register(new StackDebugOverlay());
     }
 
@@ -40,3 +40,5 @@ public final class StackRender {
         }
     }
 }
+
+

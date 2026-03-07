@@ -1,7 +1,7 @@
-package com.example.examplemod.render;
+package com.shaneeexd.stackrender.render;
 
-import com.example.examplemod.config.StackConfig;
-import com.example.examplemod.manager.StackGroupManager;
+import com.shaneeexd.stackrender.config.StackConfig;
+import com.shaneeexd.stackrender.manager.StackGroupManager;
 import com.mojang.blaze3d.vertex.PoseStack;
 import org.joml.Matrix4f;
 import net.minecraft.client.Minecraft;
@@ -64,3 +64,5 @@ public final class StackLabelRenderer {
         return 0xFFFFFF;
     }
 }
+
+

@@ -1,6 +1,6 @@
-package com.example.examplemod.mixin;
+package com.shaneeexd.stackrender.mixin;
 
-import com.example.examplemod.manager.StackGroupManager;
+import com.shaneeexd.stackrender.manager.StackGroupManager;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
@@ -19,3 +19,5 @@ public abstract class LivingEntityRendererMixin {
         }
     }
 }
+
+

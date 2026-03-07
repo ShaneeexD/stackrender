@@ -1,6 +1,6 @@
-package com.example.examplemod.event;
+package com.shaneeexd.stackrender.event;
 
-import com.example.examplemod.manager.StackGroupManager;
+import com.shaneeexd.stackrender.manager.StackGroupManager;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.event.TickEvent;
@@ -34,3 +34,5 @@ public final class ClientTickHandler {
         StackGroupManager.getInstance().clear();
     }
 }
+
+

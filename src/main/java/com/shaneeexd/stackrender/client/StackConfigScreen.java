@@ -1,6 +1,6 @@
-package com.example.examplemod.client;
+package com.shaneeexd.stackrender.client;
 
-import com.example.examplemod.config.StackConfig;
+import com.shaneeexd.stackrender.config.StackConfig;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -371,3 +371,5 @@ public final class StackConfigScreen extends Screen {
         void accept(boolean value);
     }
 }
+
+
