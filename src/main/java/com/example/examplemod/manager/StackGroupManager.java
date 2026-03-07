@@ -1,5 +1,6 @@
 package com.example.examplemod.manager;
 
+import com.example.examplemod.StackRender;
 import com.example.examplemod.config.StackConfig;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.core.BlockPos;
@@ -36,6 +37,10 @@ public final class StackGroupManager {
     private final Set<UUID> suppressedEntities = new HashSet<>();
     private final Map<UUID, Integer> representativeCounts = new HashMap<>();
     private ResourceKey<Level> lastDimension;
+    private int lastCandidateCount;
+    private int lastGroupCount;
+    private int lastSuppressedCount;
+    private long lastRebuildNanos;
 
     private StackGroupManager() {
     }
@@ -45,6 +50,7 @@ public final class StackGroupManager {
     }
 
     public void rebuild(ClientLevel level) {
+        long rebuildStart = System.nanoTime();
         if (!StackConfig.enabled) {
             clear();
             lastDimension = level.dimension();
@@ -68,6 +74,7 @@ public final class StackGroupManager {
 
         double maxDistanceSqr = (double) StackConfig.maxScanDistance * (double) StackConfig.maxScanDistance;
         Map<StackKey, List<LivingEntity>> candidates = new HashMap<>();
+        int candidateCount = 0;
         for (Entity entity : level.entitiesForRendering()) {
             if (!(entity instanceof LivingEntity livingEntity)) {
                 continue;
@@ -75,15 +82,18 @@ public final class StackGroupManager {
             if (!isGroupCandidate(minecraft, player, livingEntity, maxDistanceSqr)) {
                 continue;
             }
+            candidateCount++;
             StackKey key = new StackKey(livingEntity.getType(), getGroupingPos(livingEntity), getVariant(livingEntity));
             candidates.computeIfAbsent(key, ignored -> new ArrayList<>()).add(livingEntity);
         }
 
+        int groupCount = 0;
         for (Map.Entry<StackKey, List<LivingEntity>> entry : candidates.entrySet()) {
             List<LivingEntity> members = entry.getValue();
             if (members.size() < StackConfig.minimumStackSize) {
                 continue;
             }
+            groupCount++;
             members.sort(UUID_COMPARATOR);
             LivingEntity representative = members.get(0);
             groups.put(entry.getKey(), List.copyOf(members));
@@ -94,6 +104,14 @@ public final class StackGroupManager {
                     suppressedEntities.add(entity.getUUID());
                 }
             }
+        }
+
+        lastCandidateCount = candidateCount;
+        lastGroupCount = groupCount;
+        lastSuppressedCount = suppressedEntities.size();
+        lastRebuildNanos = System.nanoTime() - rebuildStart;
+        if (StackConfig.debugLogging) {
+            StackRender.LOGGER.info("Stack rebuild: candidates={}, groups={}, suppressed={}, ms={}", lastCandidateCount, lastGroupCount, lastSuppressedCount, String.format("%.3f", getLastRebuildMillis()));
         }
     }
 
@@ -109,11 +127,31 @@ public final class StackGroupManager {
         return representativeCounts.containsKey(entity.getUUID());
     }
 
+    public int getLastCandidateCount() {
+        return lastCandidateCount;
+    }
+
+    public int getLastGroupCount() {
+        return lastGroupCount;
+    }
+
+    public int getLastSuppressedCount() {
+        return lastSuppressedCount;
+    }
+
+    public double getLastRebuildMillis() {
+        return lastRebuildNanos / 1_000_000.0D;
+    }
+
     public void clear() {
         groups.clear();
         suppressedEntities.clear();
         representativeCounts.clear();
         lastDimension = null;
+        lastCandidateCount = 0;
+        lastGroupCount = 0;
+        lastSuppressedCount = 0;
+        lastRebuildNanos = 0L;
     }
 
     private boolean isGroupCandidate(Minecraft minecraft, Player player, LivingEntity entity, double maxDistanceSqr) {

@@ -28,10 +28,12 @@ public final class StackConfig {
     public static final ForgeConfigSpec.IntValue GROUPING_CELL_SIZE = BUILDER.defineInRange("groupingCellSize", 1, 1, 8);
     public static final ForgeConfigSpec.BooleanValue STACK_PASSIVE_MOBS = BUILDER.define("stackPassiveMobs", true);
     public static final ForgeConfigSpec.BooleanValue STACK_HOSTILE_MOBS = BUILDER.define("stackHostileMobs", true);
-    public static final ForgeConfigSpec.BooleanValue GROUP_SHEEP_BY_COLOR = BUILDER.define("groupSheepByColor", true);
-    public static final ForgeConfigSpec.BooleanValue GROUP_CAT_BY_VARIANT = BUILDER.define("groupCatByVariant", true);
-    public static final ForgeConfigSpec.BooleanValue GROUP_HORSE_BY_VARIANT = BUILDER.define("groupHorseByVariant", true);
-    public static final ForgeConfigSpec.BooleanValue GROUP_TROPICAL_FISH_BY_VARIANT = BUILDER.define("groupTropicalFishByVariant", true);
+    public static final ForgeConfigSpec.BooleanValue GROUP_SHEEP_BY_COLOR = BUILDER.define("groupSheepByColor", false);
+    public static final ForgeConfigSpec.BooleanValue GROUP_CAT_BY_VARIANT = BUILDER.define("groupCatByVariant", false);
+    public static final ForgeConfigSpec.BooleanValue GROUP_HORSE_BY_VARIANT = BUILDER.define("groupHorseByVariant", false);
+    public static final ForgeConfigSpec.BooleanValue GROUP_TROPICAL_FISH_BY_VARIANT = BUILDER.define("groupTropicalFishByVariant", false);
+    public static final ForgeConfigSpec.BooleanValue DEBUG_OVERLAY = BUILDER.define("debugOverlay", false);
+    public static final ForgeConfigSpec.BooleanValue DEBUG_LOGGING = BUILDER.define("debugLogging", false);
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> DISABLED_ENTITY_TYPES = BUILDER.defineListAllowEmpty(
             "disabledEntityTypes",
             List.of(),
@@ -53,6 +55,8 @@ public final class StackConfig {
     public static boolean groupCatByVariant;
     public static boolean groupHorseByVariant;
     public static boolean groupTropicalFishByVariant;
+    public static boolean debugOverlay;
+    public static boolean debugLogging;
     public static final Set<String> disabledEntityTypeIds = new LinkedHashSet<>();
 
     private static ModConfig activeConfig;
@@ -75,7 +79,29 @@ public final class StackConfig {
         values.groupCatByVariant = groupCatByVariant;
         values.groupHorseByVariant = groupHorseByVariant;
         values.groupTropicalFishByVariant = groupTropicalFishByVariant;
+        values.debugOverlay = debugOverlay;
+        values.debugLogging = debugLogging;
         values.disabledEntityTypeIds.addAll(disabledEntityTypeIds);
+        return values;
+    }
+
+    public static EditableValues defaults() {
+        EditableValues values = new EditableValues();
+        values.enabled = true;
+        values.minimumStackSize = 3;
+        values.showLabel = true;
+        values.labelScale = 1.0F;
+        values.suppressDeathAnimations = true;
+        values.maxScanDistance = 64;
+        values.groupingCellSize = 1;
+        values.stackPassiveMobs = true;
+        values.stackHostileMobs = true;
+        values.groupSheepByColor = false;
+        values.groupCatByVariant = false;
+        values.groupHorseByVariant = false;
+        values.groupTropicalFishByVariant = false;
+        values.debugOverlay = false;
+        values.debugLogging = false;
         return values;
     }
 
@@ -93,6 +119,8 @@ public final class StackConfig {
         GROUP_CAT_BY_VARIANT.set(values.groupCatByVariant);
         GROUP_HORSE_BY_VARIANT.set(values.groupHorseByVariant);
         GROUP_TROPICAL_FISH_BY_VARIANT.set(values.groupTropicalFishByVariant);
+        DEBUG_OVERLAY.set(values.debugOverlay);
+        DEBUG_LOGGING.set(values.debugLogging);
         DISABLED_ENTITY_TYPES.set(new ArrayList<>(values.disabledEntityTypeIds));
         bake();
         if (activeConfig != null) {
@@ -128,6 +156,8 @@ public final class StackConfig {
         groupCatByVariant = GROUP_CAT_BY_VARIANT.get();
         groupHorseByVariant = GROUP_HORSE_BY_VARIANT.get();
         groupTropicalFishByVariant = GROUP_TROPICAL_FISH_BY_VARIANT.get();
+        debugOverlay = DEBUG_OVERLAY.get();
+        debugLogging = DEBUG_LOGGING.get();
         disabledEntityTypeIds.clear();
         for (String id : DISABLED_ENTITY_TYPES.get()) {
             disabledEntityTypeIds.add(id);
@@ -160,6 +190,8 @@ public final class StackConfig {
         public boolean groupCatByVariant;
         public boolean groupHorseByVariant;
         public boolean groupTropicalFishByVariant;
+        public boolean debugOverlay;
+        public boolean debugLogging;
         public final Set<String> disabledEntityTypeIds = new LinkedHashSet<>();
     }
 }

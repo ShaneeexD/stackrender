@@ -1,5 +1,6 @@
 package com.example.examplemod;
 
+import com.example.examplemod.client.StackDebugOverlay;
 import com.example.examplemod.client.StackConfigScreen;
 import com.mojang.logging.LogUtils;
 import com.example.examplemod.config.StackConfig;
@@ -22,6 +23,7 @@ public final class StackRender {
     public StackRender(FMLJavaModLoadingContext context) {
         context.registerConfig(ModConfig.Type.CLIENT, StackConfig.SPEC, "stackrender-client.toml");
         MinecraftForge.EVENT_BUS.register(new com.example.examplemod.event.ClientTickHandler());
+        MinecraftForge.EVENT_BUS.register(new StackDebugOverlay());
     }
 
     @Mod.EventBusSubscriber(modid = MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
